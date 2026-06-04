@@ -7,24 +7,28 @@ from .models import Product
 def api_login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
+        u = data.get('username')
+        p = data.get('password')
         
-        if username == "sahabat" and password == "sahabatstok":
+        # Logika login dipindah ke sini
+        if u == "sahabat" and p == "sahabatstok":
             return JsonResponse({"status": "sukses", "user": "Budi Santoso"})
-        return JsonResponse({"status": "gagal", "pesan": "Username atau password salah"}, status=400)
+        return JsonResponse({"status": "gagal", "pesan": "Username atau password salah!"}, status=401)
 
 def api_dashboard(request):
-    # Mengambil semua data produk dari database berdasarkan urutan terlaris
-    products = Product.objects.all().order_by('-total_qty')
-    product_list = list(products.values('name', 'total_qty', 'price'))
+    # Mengambil semua produk dari database (yang sebelumnya kamu input di Admin)
+    products = list(Product.objects.all().values('name', 'total_qty', 'price'))
     
-    total_terjual = sum(p['total_qty'] for p in product_list)
-    rata_rata = round(total_terjual / len(product_list)) if product_list else 0
-    top_product = product_list[0] if product_list else {"name": "-", "total_qty": 0, "price": 0}
-    
+    if not products:
+        return JsonResponse({"products": [], "total_terjual": 0, "rata_rata": 0, "top_product": None})
+
+    total_terjual = sum(p['total_qty'] for p in products)
+    rata_rata = round(total_terjual / len(products))
+    # Mengurutkan untuk mencari top product
+    top_product = sorted(products, key=lambda x: x['total_qty'], reverse=True)[0]
+
     return JsonResponse({
-        "products": product_list,
+        "products": products,
         "total_terjual": total_terjual,
         "rata_rata": rata_rata,
         "top_product": top_product
@@ -34,24 +38,32 @@ def api_dashboard(request):
 def api_predict(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        product_name = data.get('product_name')
-        week = int(data.get('week', 4))
+        nama_produk = data.get('product_name')
+        week = int(data.get('week'))
         month = data.get('month')
-        year = int(data.get('year', 2025))
+        year = int(data.get('year'))
         
-        # Di sini nanti tempat kamu memuat file model ML (.pkl atau .h5) menggunakan joblib/pickle
         try:
-            product = Product.objects.get(name=product_name)
-            base_qty = product.total_qty / 52
+            prod = Product.objects.get(name=nama_produk)
+            base = prod.total_qty / 52
             
-            # Logika matematika sementara sebelum diganti fungsi model.predict() yang asli
-            prediction_val = round(base_qty * 1.1) 
-            
+            # Rumus matematika prediksi dipindah ke sini (sebelum diganti model ML nanti)
+            factors = {
+                "Januari": 0.92, "Februari": 0.94, "Maret": 0.97, "April": 1.02,
+                "Mei": 1.06, "Juni": 1.05, "Juli": 1.0, "Agustus": 0.98,
+                "September": 1.02, "Oktober": 1.09, "November": 1.15, "Desember": 1.22
+            }
+            factor = factors.get(month, 1.0)
+            yearBonus = (year - 2024) * 0.018
+            val = round(base * (factor + yearBonus))
+            if week >= 3:
+                val = round(val * 1.01)
+            pred_val = max(10, val)
+
             return JsonResponse({
-                "status": "success",
-                "prediction": prediction_val,
-                "accuracy": "94.2%",
-                "product_name": product_name
+                "status": "sukses",
+                "prediction": pred_val,
+                "product": {"name": prod.name, "totalQty": prod.total_qty, "price": prod.price}
             })
         except Product.DoesNotExist:
-            return JsonResponse({"status": "error", "pesan": "Produk tidak ditemukan"}, status=404)
+            return JsonResponse({"status": "gagal", "pesan": "Produk tidak ditemukan"}, status=404)
