@@ -1,0 +1,4 @@
+Sub-Category,Rank,Model Name,MAE,RMSE,R2,MAPE
+Global (All Products),Top 1,et,3.7111,4.5132,-0.7146,0.7624
+Global (All Products),Top 2,gbr,3.8755,5.1985,-1.0725,0.8173
+Global (All Products),Top 3,lightgbm,3.9396,4.9347,-1.2895,0.7409
