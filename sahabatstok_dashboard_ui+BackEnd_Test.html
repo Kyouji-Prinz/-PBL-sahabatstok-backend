@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=yes"
     />
-    <title>SmartSales — AI Inventory Intelligence</title>
+    <title>SahabatStok — AI Inventory Intelligence</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
       rel="stylesheet"
@@ -445,7 +445,7 @@
     <div id="loginOverlay" class="login-overlay">
       <div class="login-card">
         <div class="login-icon">📦</div>
-        <h2>SmartSales</h2>
+        <h2>SahabatStok</h2>
         <input
           type="text"
           id="loginUser"
@@ -462,7 +462,7 @@
             placeholder="Password"
             onkeydown="if(event.key === 'Enter') doLogin();"
           />
-          <span class="toggle-password" onclick="togglePassword()" title="Tampilkan/Sembunyikan Password">👁️⃠</span>
+          <span class="toggle-password" onclick="togglePassword()" title="Tampilkan/Sembunyikan Password">👁️</span>
         </div>
         <button class="login-btn" onclick="doLogin()">Masuk →</button>
         <div id="loginError" class="error-msg"></div>
@@ -474,7 +474,7 @@
         <aside class="sidebar">
           <div class="sidebar-logo">
             <div class="logo-icon">📦</div>
-            <div class="logo-text">SmartSales</div>
+            <div class="logo-text">SahabatStok</div>
           </div>
           <nav class="sidebar-nav">
             <div class="nav-item active" onclick="showPage('dashboard', this)">
@@ -498,7 +498,7 @@
         <div class="main">
           <div class="topbar">
             <div class="topbar-left">
-              ✨ SmartSales <span style="color: #2563eb">AI</span>
+              ✨ SahabatStok <span style="color: #2563eb">AI</span>
             </div>
             <div class="search-bar">
               🔍
@@ -555,14 +555,14 @@
           <div class="page" id="page-prediksi">
             <div class="card">
               <div class="card-header">
-                <span class="card-title">🔮 Form Prediksi Penjualan (AI)</span>
+                <span class="card-title">🔮 Form Analisis Proyeksi Penjualan (AI)</span>
               </div>
               
               <div style="margin-bottom: 1.25rem;">
                 <label style="font-weight:600; font-size:0.9rem; color:#374151;">🔮 Tipe Skala Analisis Model</label>
                 <select id="predTipe" class="form-control" onchange="handleTipePrediksiChange()" style="margin-top:4px; border:2px solid #3b82f6;">
-                  <option value="weekly" selected>Analisis Mingguan</option>
-                  <option value="monthly">Analisis Bulanan</option>
+                  <option value="weekly" selected>Analisis Mikro Mingguan (Model Lokal per Sub-Kategori)</option>
+                  <option value="monthly">Analisis Makro Bulanan (Model Global Komprehensif)</option>
                 </select>
               </div>
               
@@ -573,7 +573,7 @@
                 </div>
                 
                 <div class="form-group">
-                  <label>⏳ Tahun Dasar Acuan Model</label>
+                  <label>⏳ Tahun Dasar Acuan Model (Data Latih)</label>
                   <input
                     type="number"
                     id="predTahun"
@@ -582,21 +582,21 @@
                     min="2014"
                     max="2017"
                   />
-                  <small style="color:#6b7280; font-size:0.75rem;">Rentang tahun: 2014 - 2017</small>
+                  <small style="color:#6b7280; font-size:0.75rem;">Rentang basis latih: 2014 - 2017</small>
                 </div>
                 
                 <div class="form-group" id="mingguFormGroup">
-                  <label>🔮 Prediksi Mingguan</label>
+                  <label>🔮 Jarak Horizon Prediksi (Step Ahead)</label>
                   <select id="predMinggu" class="form-control">
-                    <option value="1">1 Minggu ke depan</option>
-                    <option value="2">2 Minggu ke depan</option>
-                    <option value="3">3 Minggu ke depan</option>
-                    <option value="4" selected>4 Minggu ke depan</option>
+                    <option value="1">1 Minggu ke depan (+1 W)</option>
+                    <option value="2">2 Minggu ke depan (+2 W)</option>
+                    <option value="3">3 Minggu ke depan (+3 W)</option>
+                    <option value="4" selected>4 Minggu ke depan (+4 W)</option>
                   </select>
                 </div>
                 
                 <div class="form-group" id="bulanFormGroup" style="opacity: 0.3;">
-                  <label>📅 Prediksi Bulanan</label>
+                  <label>📅 Bulan Target Proyeksi</label>
                   <select id="predBulan" class="form-control" disabled>
                     <option>Januari</option>
                     <option>Februari</option>
@@ -622,7 +622,7 @@
               class="card"
               style="text-align: center; padding: 2rem"
             >
-              🔮 Klik prediksi untuk melihat hasil.
+              🔮 Tentukan parameter di atas untuk memanggil fungsi predict model.
             </div>
           </div>
 
@@ -632,7 +632,7 @@
               class="card"
               style="text-align: center; padding: 2rem"
             >
-              ✨ Belum ada prediksi. Jalankan prediksi terlebih dahulu.
+              ✨ Belum ada data. Silakan jalankan perhitungan model terlebih dahulu.
             </div>
           </div>
 
@@ -672,16 +672,16 @@
         prodChart = null,
         trendChart = null;
 
-      // Konseptualisasi Arsitektur Alur Sistem Prediksi Berbasis API Endpoint
-      // 
+
+
 
       function formatNum(n) {
         return n.toLocaleString("id-ID");
       }
       function formatRp(n) {
-        return "$ " + n.toLocaleString("id-ID");
+        return "Rp " + n.toLocaleString("id-ID");
       }
-      // Sistem pemberitahuan status real-time
+
       function toast(msg) {
         let c = document.getElementById("toastContainer");
         let t = document.createElement("div");
@@ -698,7 +698,7 @@
           arr.push(Math.round(weeklyAvg * (0.88 + i * 0.025)));
         return arr;
       }
-
+      // REVISI 1: GRAFIK SEMUA PRODUK DIURUTKAN DARI TERTINGGI KE TERENDAH
       function initBarChart() {
         const canvas = document.getElementById("barChartAll");
         if (!canvas) return;
@@ -826,9 +826,6 @@
           products.map((p) => `<option value="${p.name}">${p.name}</option>`).join("");
       }
 
-      // =================================================================
-      // POINT 3 & 4: LOGIKA TOGGLE FORM DINAMIS ANTARA BULANAN DAN MINGGUAN
-      // =================================================================
       function handleTipePrediksiChange() {
         let tipe = document.getElementById("predTipe").value;
         let mingguSelect = document.getElementById("predMinggu");
@@ -837,14 +834,12 @@
         let bulanContainer = document.getElementById("bulanFormGroup");
         
         if (tipe === "monthly") {
-          // Mode Bulanan: Matikan pilihan minggu, hidupkan pilihan bulan target
           mingguSelect.disabled = true;
           mingguContainer.style.opacity = "0.3";
           
           bulanSelect.disabled = false;
           bulanContainer.style.opacity = "1";
         } else {
-          // Mode Mingguan: Hidupkan horizon minggu, matikan input bulan kalender
           mingguSelect.disabled = false;
           mingguContainer.style.opacity = "1";
           
@@ -853,7 +848,6 @@
         }
       }
 
-      // INTEGRASI KOMUNIKASI FRONTEND KE BACKEND API DJANGO
       async function runPrediksi() {
         let name = document.getElementById("predProduk").value;
         if (!name) {
@@ -887,9 +881,8 @@
                 };
                 
                 let pct = data.metrics.percentage;
-                // Penyesuaian keterangan teks output agar dosen paham alur berpikir model
                 let infoWaktu = tipe === "weekly" 
-                  ? `Prediksi: +${week} Minggu ke depan (Dari Data Latih Tahun ${year})` 
+                  ? `Horizon Langkah: +${week} Minggu ke depan (Dari Data Latih Tahun ${year})` 
                   : `Target Proyeksi Makro Bulan: ${month} (Dari Data Latih Tahun ${year})`;
                 
                 document.getElementById("predResult").innerHTML = `
@@ -911,7 +904,6 @@
         }
       }
 
-      // REVISI VISUALISASI HASIL & GRAFIK (MENGHINDARI SALAH PENGARTIAN)
       function renderHasil() {
         if (!lastPrediction) return;
         
@@ -961,10 +953,9 @@
             ? Math.round(amankanQty / 12) 
             : Math.round(amankanQty / 52);
         
-        // Penyesuaian nama sumbu X Grafik agar sesuai point 3 & 4
         let labelsGrafik = isBulanan
             ? ["Historis (B-3)", "Historis (B-2)", "Historis (B-1)", `Tahun Acuan (${year})`, `Proyeksi Target Bulan (${month})`]
-            : ["Historis (M-3)", "Historis (M-2)", "Historis (M-1)", `Tahun Acuan (${year})`, `Prediksi (+${week} Minggu)`];
+            : ["Historis (M-3)", "Historis (M-2)", "Historis (M-1)", `Tahun Acuan (${year})`, `Horizon Langkah (+${week} Minggu)`];
         
         if (trendChart) trendChart.destroy();
         trendChart = new Chart(ctx, {
@@ -1075,19 +1066,20 @@
         if (pageName === "hasil" && lastPrediction) renderHasil();
         else if (pageName === "hasil" && !lastPrediction)
           document.getElementById("hasilContainer").innerHTML =
-            `<div style="text-align:center; padding:2rem;">✨ Belum ada prediksi. Jalankan prediksi terlebih dahulu.</div>`;
+            `<div style="text-align:center; padding:2rem;">✨ Belum ada data. Silakan jalankan perhitungan model terlebih dahulu.</div>`;
       }
-      
+
+      // FUNGSI BARU: LOGIKA SHOW/HIDE PASSWORD
       function togglePassword() {
         let passInput = document.getElementById("loginPass");
         let toggleIcon = document.querySelector(".toggle-password");
         
         if (passInput.type === "password") {
           passInput.type = "text";
-          toggleIcon.innerText = "👁️"; // Ubah jadi ikon mata tertutup
+          toggleIcon.innerText = "🙈"; // Ubah jadi ikon mata tertutup
         } else {
           passInput.type = "password";
-          toggleIcon.innerText = "👁️⃠"; // Ubah jadi ikon mata terbuka
+          toggleIcon.innerText = "👁️"; // Ubah jadi ikon mata terbuka
         }
       }
 
@@ -1122,6 +1114,14 @@
         document.getElementById("loginOverlay").style.display = "flex";
         document.getElementById("appWrapper").style.display = "none";
         lastPrediction = null;
+        
+        // Membersihkan form login saat logout
+        document.getElementById("loginUser").value = "";
+        document.getElementById("loginPass").value = "";
+        document.getElementById("loginPass").type = "password";
+        document.querySelector(".toggle-password").innerText = "👁️";
+        document.getElementById("loginError").innerText = "";
+        
         toast("Anda telah keluar.");
       }
 
