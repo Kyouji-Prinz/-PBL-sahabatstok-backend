@@ -867,7 +867,7 @@
         document.getElementById("predResult").innerHTML = `<div style="text-align:center; padding: 2rem;">🤖 Sistem sedang mengeksekusi model pkl server...</div>`;
 
         try {
-            let response = await fetch("http://127.0.0.1:8000/api/predict/", {
+            let response = await fetch("https://kyouji-prinz.github.io/-PBL-sahabatstok-backend/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ product_name: name, week: week, month: month, year: year, type: tipe })
@@ -1094,7 +1094,7 @@
         let p = document.getElementById("loginPass").value;
     
         try {
-            let response = await fetch("http://127.0.0.1:8000/api/login/", {
+            let response = await fetch("https://kyouji-prinz.github.io/-PBL-sahabatstok-backend/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username: u, password: p })
