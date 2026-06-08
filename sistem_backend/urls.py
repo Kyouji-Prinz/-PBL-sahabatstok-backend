@@ -21,5 +21,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api_stok.urls')),
-    path('', RedirectView.as_view(url='https://kyouji-prinz.github.io/nama-repo-mu/')),
+    path('', RedirectView.as_view(url='https://github.com/Kyouji-Prinz/-PBL-sahabatstok-backend')),
 ]
