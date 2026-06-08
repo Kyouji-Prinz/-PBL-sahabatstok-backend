@@ -692,7 +692,7 @@
       }
 
       function getWeeklySales(product) {
-        const weeklyAvg = product.total_qty / 52;
+        const weeklyAvg = product.total_qty / 208;
         let arr = [];
         for (let i = 0; i < 8; i++)
           arr.push(Math.round(weeklyAvg * (0.88 + i * 0.025)));
@@ -720,9 +720,7 @@
         barChart = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: sortedProducts.map((p) =>
-              p.name.length > 22 ? p.name.slice(0, 20) + ".." : p.name,
-            ),
+            labels: sortedProducts.map((p) => getNamaPendek(p.name)),
             datasets: [
               {
                 label: "Total Terjual (pcs)",
@@ -823,7 +821,7 @@
       function populateDropdown() {
         let select = document.getElementById("predProduk");
         select.innerHTML = '<option value="">-- Pilih Produk --</option>' +
-          products.map((p) => `<option value="${p.name}">${p.name}</option>`).join("");
+          products.map((p) => `<option value="${p.name}">${getNamaPendek(p.name)}</option>`).join("");
       }
 
       // =================================================================
@@ -958,13 +956,13 @@
         let amankanQty = prod.totalQty || prod.total_qty || 0;
         
         let baseQty = isBulanan 
-            ? Math.round(amankanQty / 12) 
-            : Math.round(amankanQty / 52);
+            ? Math.round(amankanQty / 48) 
+            : Math.round(amankanQty / 208);
         
         // Penyesuaian nama sumbu X Grafik agar sesuai point 3 & 4
         let labelsGrafik = isBulanan
-            ? ["Historis (B-3)", "Historis (B-2)", "Historis (B-1)", `Tahun Acuan (${year})`, `Proyeksi Target Bulan (${month})`]
-            : ["Historis (M-3)", "Historis (M-2)", "Historis (M-1)", `Tahun Acuan (${year})`, `Prediksi (+${week} Minggu)`];
+            ? ["Periode 3", "Periode 2", "Periode 1", `Tahun Acuan (${year})`, `Proyeksi Target Bulan (${month})`]
+            : ["Periode 3", "Periode 2", "Periode 1", `Tahun Acuan (${year})`, `Prediksi (+${week} Minggu)`];
         
         if (trendChart) trendChart.destroy();
         trendChart = new Chart(ctx, {
@@ -1048,9 +1046,9 @@
           <div class="mt-2">↩️ Return <strong>${st.returned}%</strong><div class="progress-bar mt-1"><div class="progress-fill" style="width:${st.returned}%; background:#f59e0b"></div></div></div>
           <div class="mt-2">❌ Canceled <strong>${st.canceled}%</strong><div class="progress-bar mt-1"><div class="progress-fill" style="width:${st.canceled}%; background:#ef4444"></div></div></div>
         `;
-        let yearlyTarget = Math.round(p.total_qty * 1.05);
+        let yearlyTarget = Math.round((p.total_qty / 4) * 1.05); 
         let weeklyTarget = Math.round(yearlyTarget / 52);
-        let actualAvg = p.total_qty / 52;
+        let actualAvg = p.total_qty / 208;
         let prog = Math.min(100, Math.round((actualAvg / weeklyTarget) * 100));
         document.getElementById("targetInfo").innerHTML = `
           <div>🎯 Target mingguan: <strong>${formatNum(weeklyTarget)} pcs</strong></div>
@@ -1130,6 +1128,25 @@
         document.getElementById("loginOverlay").style.display = "flex";
         document.getElementById("appWrapper").style.display = "none";
       };
+
+      // Kamus penerjemah nama panjang DB ke nama pendek UI
+      const mapNamaPendek = {
+        "Computer Peripherals": "Accessories",
+        "Pens & Art Supplies": "Art",
+        "Binders & Binder Accessories": "Binders",
+        "Chairs & Chairmats": "Chairs",
+        "Rubber Bands": "Fasteners",
+        "Office Furnishings": "Furnishings",
+        "Telephones & Communication": "Phones",
+        "Storage & Organization": "Storage",
+        "Scissors, Rulers & Trimmers": "Supplies",
+        "Copiers & Fax": "Copiers",
+        "Office Machines": "Machines"
+      };
+
+      function getNamaPendek(namaPanjang) {
+          return mapNamaPendek[namaPanjang] || namaPanjang;
+      }
     </script>
   </body>
 </html>
