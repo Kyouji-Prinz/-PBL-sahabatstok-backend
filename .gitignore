@@ -6,3 +6,5 @@ db.sqlite3
 mlruns/
 model pycaret/mlruns/
 model manual/mlruns/
+
+.env
