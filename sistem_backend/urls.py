@@ -14,10 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.views.generic import RedirectView
 from django.contrib import admin
 from django.urls import path, include 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api_stok.urls')),
+    path('', RedirectView.as_view(url='https://kyouji-prinz.github.io/nama-repo-mu/')),
 ]
